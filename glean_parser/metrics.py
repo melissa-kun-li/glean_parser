@@ -99,7 +99,10 @@ class Metric:
                 self.category: {self.name: self._serialize_input()},
             }  # type: Dict[str, util.JSONType]
             for error in parser.validate(data):
-                raise ValueError(error)
+                if defined_in is not None:
+                    raise ValueError(f"{error} (line {str(defined_in['line'])})")
+                else:
+                    raise ValueError(error)
 
         # Store the config, but only after validation.
         if _config is None:
